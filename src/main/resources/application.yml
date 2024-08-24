@@ -1,0 +1,43 @@
+logger:
+    level:
+        root: DEBUG
+server:
+    error:
+        whitelabel:
+            enabled: false
+    port: 8080
+
+spring:
+    application:
+        name: springboot-rbac
+    main:
+        allow-bean-definition-overriding: true
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER
+    profiles:
+        active: dev
+springdoc:
+    api-docs:
+        path: /v3/api-docs
+    group-configs:
+       group: 'default'
+       packagesToScan: 'org.ranger'
+       pathsToMatch: '/**'
+    security:
+        enabled: true
+    swagger-ui:
+        operations-sorter: alpha
+        path: /swagger-ui.html
+knife4j:
+    enable: true
+    security:
+        basic:
+            enabled: true
+    setting:
+        home-custom-path: /doc.html
+        language: zh-cn
+security:
+    jwt:
+        expiration-in-ms: 1800000
+        secret: AsoSsdhf98bnkzdfA223QQQ345345345342eterterterterte23453
