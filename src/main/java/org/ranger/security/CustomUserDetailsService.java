@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+ 
 
 
 import java.util.*;
@@ -28,8 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private SysUserRoleMapper userRoleMapper;
     @Autowired
     private SysRoleMapper roleMapper;
-    @Autowired
-    private  PasswordEncoder passwordEncoder;
+    
     @Autowired
     private SysRolePermissionMapper rolePermissionMapper;
     @Autowired
@@ -47,6 +46,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private CustomUserDetails findCustomUserDetailsByUsername(String username) {
         SysUser user = userMapper.selectByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found: " + username);
+        }
         List<SysUserRole> sysUserRoles = userRoleMapper.selectAllByIdUserId(user.getUserId());
         List<Long> roleIds = sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
         List<SysRole> roles = roleMapper.selectBatchIds(roleIds);
@@ -68,9 +70,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 }
             }
         }
-        String password = passwordEncoder.encode(user.getPassword());
         CustomUserDetails userDetails=new CustomUserDetails(user.getUsername(),user.getPassword(),authorities);
-        log.debug("Encoder password:"+password);
         return userDetails;
     }
 }
